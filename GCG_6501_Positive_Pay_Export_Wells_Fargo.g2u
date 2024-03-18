@@ -1,0 +1,227 @@
+﻿Program.Sub.ScreenSU.Start
+Gui.Form..Create(BaseForm)
+Gui.Form..Caption("Positive Pay Export")
+Gui.Form..Size(4905,2895)
+Gui.Form..MinX(0)
+Gui.Form..MinY(0)
+Gui.Form..Position(0,0)
+Gui.Form..BackColor(-2147483633)
+Gui.Form..MousePointer(0)
+Gui.Form..Sizeable(False)
+Gui.Form..Event(Drop,Unload)
+Gui.Form..AlwaysOnTop(False)
+Gui.Form..FontName("Tahoma")
+Gui.Form..FontSize(8.25)
+Gui.Form..ControlBox(True)
+Gui.Form..MaxButton(True)
+Gui.Form..MinButton(True)
+Gui.Form..Moveable(True)
+Gui.Form..ShowInTaskBar(True)
+Gui.Form..TitleBar(True)
+Gui.Form.dtpBegDate.Create(DatePicker)
+Gui.Form.dtpBegDate.Size(1665,285)
+Gui.Form.dtpBegDate.Position(165,1590)
+Gui.Form.dtpBegDate.Enabled(True)
+Gui.Form.dtpBegDate.Visible(True)
+Gui.Form.dtpBegDate.Zorder(0)
+Gui.Form.dtpBegDate.CheckBox(False)
+Gui.Form.dtpBegDate.FontName("Tahoma")
+Gui.Form.dtpBegDate.FontSize(8.25)
+Gui.Form.lblBegDate.Create(Label,"Beginning Date",True,1080,210,0,135,1275,True,0,"Arial",8,-2147483633,0,0)
+Gui.Form.lblBegDate.BorderStyle(0)
+Gui.Form.dtpEndingDate.Create(DatePicker)
+Gui.Form.dtpEndingDate.Size(1650,285)
+Gui.Form.dtpEndingDate.Position(2625,1605)
+Gui.Form.dtpEndingDate.Enabled(True)
+Gui.Form.dtpEndingDate.Visible(True)
+Gui.Form.dtpEndingDate.Zorder(0)
+Gui.Form.dtpEndingDate.CheckBox(False)
+Gui.Form.dtpEndingDate.FontName("Tahoma")
+Gui.Form.dtpEndingDate.FontSize(8.25)
+Gui.Form.lblEndingDate.Create(Label,"Ending Date",True,855,210,0,2580,1290,True,0,"Arial",8,-2147483633,0,0)
+Gui.Form.lblEndingDate.BorderStyle(0)
+Gui.Form.cmdCreate.Create(Button)
+Gui.Form.cmdCreate.Size(825,405)
+Gui.Form.cmdCreate.Position(180,2025)
+Gui.Form.cmdCreate.Caption("Create")
+Gui.Form.cmdCreate.Event(Click,GetData)
+Gui.Form.cmdCreate.Enabled(True)
+Gui.Form.cmdCreate.Visible(True)
+Gui.Form.cmdCreate.Zorder(0)
+Gui.Form.cmdCreate.FontName("Tahoma")
+Gui.Form.cmdCreate.FontSize(8.25)
+Gui.Form.lbl1.Create(Label,"Routing Number",True,1155,195,0,105,180,True,0,"Tahoma",8.25,,0,0)
+Gui.Form.lbl1.BorderStyle(0)
+Gui.Form.lbl2.Create(Label,"Bank Account",True,975,195,0,105,555,True,0,"Tahoma",8.25,,0,0)
+Gui.Form.lbl2.BorderStyle(0)
+Gui.Form.txtRouting.Create(TextBox,"",True,1755,300,0,1530,90,True,0,"Tahoma",8.25,,1)
+Gui.Form.txtBankAcct.Create(TextBox,"",True,1740,300,0,1530,465,True,0,"Tahoma",8.25,,1)
+Gui.Form.lbl3.Create(Label,"Transaction Type",True,1245,195,0,105,945,True,0,"Tahoma",8.25,,0,0)
+Gui.Form.lbl3.BorderStyle(0)
+Gui.Form.txtTransType.Create(TextBox,"",True,1755,300,0,1545,870,True,0,"Tahoma",8.25,,1)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+'Quote: 12927-0 - ELM010-51320211552-0
+'Customer: ELMET
+'Desc: export Positive Pay for Wells Fargo
+'Programmer: Bryan Pham
+'Date: 10/01/2021
+
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+'open connection to the database
+F.ODBC.Connection!conx.OpenConnection(V.Ambient.PDSN,V.Ambient.PUser,V.Ambient.PPass)
+gui.Form.txtRouting.Text("121000248")
+gui.Form.txtBankAcct.Text("4078359569")
+gui.Form.txtTransType.Text("320")
+'display the form
+gui.Form..Visible(true)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_5296_Positive_Pay.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.CallSub(unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Main.End
+
+Program.Sub.Unload.Start
+F.Intrinsic.Control.SetErrorHandler("Unload_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+gui.Form..Visible(false)
+
+F.ODBC.Connection!conx.Close
+
+'closes the program
+F.Intrinsic.Control.End
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Unload_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_5296_Positive_Pay.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End
+
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Unload.End
+
+Program.Sub.GetData.Start
+F.Intrinsic.Control.SetErrorHandler("GetData_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.ssql.Declare(String)
+V.Local.dbdate.Declare(Date)
+V.Local.dedate.Declare(Date)
+V.Local.i.Declare(Long)
+v.Local.itotalchecks.Declare(long)
+v.Local.ftotal.Declare(float)
+v.Local.scsv.Declare(string)
+v.Local.sfilename.Declare(string)
+v.Local.sRoute.Declare(String)
+v.Local.sAcct.Declare(String)
+v.Local.sCheck.Declare(String)
+v.Local.sCust.Declare(String)
+V.Local.sEncryptedBankAccount.Declare
+V.Local.sEncryptedRouting.Declare
+v.Local.sRet.Declare
+v.Local.sRouting.Declare
+v.Local.sBankAcct.Declare
+v.Local.sCheckDate.Declare
+v.Local.iTransType.Declare
+v.Local.sString.Declare
+
+'set the begging and ending dates
+V.Local.dbdate.Set(V.Screen.Form!dtpBegDate.Value)
+V.Local.dedate.Set(V.Screen.Form!dtpEndingDate.Value)
+v.Local.iTransType.Set(v.Screen.Form!txtTransType.Text)
+
+'hide form
+gui.Form..Visible(false)
+
+'invoke wait dialog
+f.Intrinsic.UI.InvokeWaitDialog("Generating CSV File...")
+
+'file layout
+'Routing Number, Bank Account Number, Check Number, Check Date, Check Amount, Transaction type (320), Payee
+
+'get and set check date, payee, amount of check and check number
+F.Intrinsic.String.Build("select {3} as Routing,{4} as Bank_Acct, cast(V_CHECKS_LOG.CK_NO as FLOAT) as CK_NO, V_CHECKS_LOG.CK_DATE, '' as CHECK_DATE,CAST(V_CHECKS_LOG.AMOUNT AS DECIMAL(16,2)) as AMOUNT,{5} as Trans_Type,V_VENDOR_PAY_TO.NAME_VENDOR_PAY AS PAYEE from V_CHECKS_LOG inner join V_VENDOR_PAY_TO on V_CHECKS_LOG.VEND_NO = V_VENDOR_PAY_TO.VENDOR left join v_VENDOR_Master on V_CHECKS_LOG.VEND_NO=v_VENDOR_Master.VENDOR where V_CHECKS_LOG.CK_DATE between '{0}' and '{1}' and V_CHECKS_LOG.CK_NO NOT LIKE '{2}%' and v_VENDOR_Master.CODE_SORT = '' order by V_CHECKS_LOG.CK_NO",V.Local.dbdate.PervasiveDate,V.Local.dedate.PervasiveDate,"A",v.Screen.Form!txtRouting.Text,v.Screen.Form!txtBankAcct.Text,v.Local.iTransType,V.Local.ssql)
+
+f.Data.DataTable.CreateFromSQL("PP","conx",v.Local.ssql)
+
+'loop through data table and format
+
+F.Intrinsic.Control.For(v.Local.i,v.dataTable.PP.RowCount--,0,-1)
+	
+	f.Intrinsic.String.Format(v.DataTable.PP(v.Local.i).CK_DATE!fieldvaltrim,"MM-DD-YYYY",v.Local.sCheckDate)
+	'.Intrinsic.String.Build("'{0}",v.Local.sCheckDate,v.Local.sCheckDate)
+	f.Data.Datatable.SetValue("PP",v.Local.i,"CHECK_DATE",v.Local.sCheckDate)
+	
+	'excluding checks where the checknumber is less than 6 digits long
+	v.Local.sCheck.Set(v.DataTable.PP(v.Local.i).CK_NO!FIELDVALSTRING)
+	f.Intrinsic.Control.IF(V.Local.sCheck.Length,<,5)
+		F.Data.DataTable.DeleteRow("PP",V.Local.i)
+		f.Data.DataTable.acceptchanges("PP")
+	f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.Next(v.Local.i)
+
+f.Data.Datatable.RemoveColumn("PP","CK_DATE")
+f.Intrinsic.UI.CloseWaitDialog
+
+'open the save dialog
+f.Intrinsic.UI.ShowSaveFileDialog("","*.csv",v.Local.sfilename)
+
+f.Intrinsic.String.Build("{0}{1}",v.Local.sfilename,".csv",v.Local.sfilename)
+
+f.Intrinsic.Control.If(v.Local.sfilename,<>,"***CANCEL***.csv")
+	f.Data.DataView.Create("PP","dvPP",22)
+	f.Data.DataView.ToString("PP","dvPP","Routing*!*Bank_Acct*!*CK_NO*!*CHECK_DATE*!*AMOUNT*!*Trans_Type*!*PAYEE",",",v.Ambient.NewLine,v.Local.sString)
+	f.Intrinsic.File.String2File(v.Local.sfilename,v.Local.sString)
+	'F.Data.DataTable.SaveToCSV("PP",V.Local.sfilename,False)
+	F.Intrinsic.String.Build("File saved to {0}",V.Local.sfilename.Trim,V.Local.sSQL)
+	F.Intrinsic.UI.Msgbox(V.Local.sSQL,"Success!")
+f.Intrinsic.Control.Else
+	'inform the user it didn't create the file
+	f.Intrinsic.UI.Msgbox("Positive Pay File Not Created")
+	f.Intrinsic.Control.CallSub(unload)
+f.Intrinsic.Control.EndIf
+
+F.Data.DataTable.Close("PP")
+
+f.Intrinsic.Control.CallSub(unload)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("GetData_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_5296_Positive_Pay.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.CallSub(unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.GetData.End
+
+Program.Sub.Comments.Start
+${$0$}$$}$WAW$}$4/26/2017 9:24:43 AM$}$True
+${$5$}$2.0.0.0$}$2
+${$6$}$bpham$}$20211001141903528$}$Di0riF4Q5RIv6jxva5zSWDOOsXP37Nsoi21TE0Nlap77bZyO9brwPoWgPFbAmWMp37E1JyP/ifg=
+Program.Sub.Comments.End
